@@ -20,41 +20,41 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div class="header">
-      <div class="navbar navbar-default" role="navigation">
-        <div class="container">
-          <div class="navbar-header">
-
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-
-            <a class="navbar-brand" href="#/">searchTheWeb</a>
-          </div>
-
-          <div class="collapse navbar-collapse" id="js-navbar-collapse">
-
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="#/">Home</a></li>
-              <li><a ng-href="#/about">About</a></li>
-              <li><a ng-href="#/">Contact</a></li>
-            </ul>
-          </div>
+     <div class="container" ng-controller="TwitterController">
+        <h1>AngularJS Instant Tweet Search Application</h1>
+        <div class="row">
+            <div class="col-xs-6">
+                <button ng-click="connectButton()" id="connectButton" type="button" class="btn btn-primary">Connect Twitter</button>
+                <button ng-click="refreshTimeline()" id="getTimelineButton" type="button" class="btn btn-info" style="display:none;">Get My Timeline</button>
+                <button ng-click="signOut()" id="signOut" type="button" class="btn btn-link" style="display:none;">Sign Out</button>
+            </div>
+            <div class="col-xs-6">
+                <input type="text" ng-model="searchTerm" class="form-control" id="searchBox" placeholder="Enter search term here" ng-show="connectedTwitter" />
+            </div>
         </div>
-      </div>
-    </div>
-
-    <div class="container">
-    <div ng-view=""></div>
-    </div>
-
-    <div class="footer">
-      <div class="container">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
-      </div>
+        <div class="row">
+            <div class="col-xs-12" id="results">
+                <div class="row" ng-repeat="t in tweets | filter:searchTerm">
+ 
+                    <div class="col-xs-2 col-sm-1">
+                        <img ng-src="{{t.user.profile_image_url}}" class="img-circle">
+                    </div>
+                    <div class="col-xs-10 col-sm-11">
+                        <small>{{t.user.name}}</small>
+                        <br> <span ng-bind-html="t.text"></span>
+                    </div>
+ 
+                </div>
+ 
+                <div ng-show="rateLimitError">
+                    Rate limit reached. You are making too many requests.
+                </div>
+                <div>
+                    <br/>
+                    <input type="button" class="btn btn-info" id="load-more" ng-click="refreshTimeline(tweets[tweets.length-1].id)" ng-show="connectedTwitter" value="Load More" />
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -77,13 +77,14 @@
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/oauth-js/dist/oauth.min.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/services/services.js"></script>
+        <script src="scripts/controllers/controller.js"></script>
         <!-- endbuild -->
 </body>
 </html>
